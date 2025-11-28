@@ -1,3 +1,4 @@
+
 // 1. Initialize the async function
 async function fetchUserData() {
     // 2. Define the API URL
@@ -19,7 +20,7 @@ async function fetchUserData() {
 
         users.forEach(user => {
             const li = document.createElement('li');
-            li.textContent = user.name;   // display each user's name
+            li.textContent = user.name;
             userList.appendChild(li);
         });
 
@@ -31,5 +32,7 @@ async function fetchUserData() {
     }
 }
 
-// Call the function to fetch data when the page loads
-fetchUserData();
+// 8. Invoke fetchUserData on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function () {
+    fetchUserData();
+});
