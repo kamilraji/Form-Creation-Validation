@@ -1,81 +1,49 @@
-// Get form and inputs
-const form = document.getElementById("registrationForm");
-const usernameInput = document.getElementById("username");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const successMessage = document.getElementById("successMessage");
+cument.addEventListener("DOMContentLoaded", function () {
 
-// Helper: show error for a field
-function showError(input, message) {
-  const formControl = input.parentElement; // .form-control
-  const errorDisplay = formControl.querySelector(".error-message");
+    const form = document.getElementById("registrationForm");
+    const feedbackDiv = document.getElementById("feedback");
 
-  errorDisplay.textContent = message;
-  input.classList.add("error");
-}
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-// Helper: clear error
-function clearError(input) {
-  const formControl = input.parentElement;
-  const errorDisplay = formControl.querySelector(".error-message");
+        // Retrieve user inputs
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
 
-  errorDisplay.textContent = "";
-  input.classList.remove("error");
-}
+        let isValid = true;
+        let errorMessages = [];
 
-// Email validation regex (simple)
-function isValidEmail(email) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
-}
+        // Validate username
+        if (username.length < 3) {
+            isValid = false;
+            errorMessages.push("Username must be at least 3 characters");
+        }
 
-// Main validation on submit
-form.addEventListener("submit", function (event) {
-  event.preventDefault(); // stop default submit for now
+        // Validate password
+        if (password.length < 6) {
+            isValid = false;
+            errorMessages.push("Password must be at least 6 characters");
+        }
 
-  // Clear previous success & errors
-  successMessage.textContent = "";
-  clearError(usernameInput);
-  clearError(emailInput);
-  clearError(passwordInput);
+        // Validate email
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            isValid = false;
+            errorMessages.push("Enter a valid email address");
+        }
 
-  let isValid = true;
+        // Display feedback logic
+        feedbackDiv.style.display = "block";
 
-  // Validate username
-  const usernameValue = usernameInput.value.trim();
-  if (usernameValue === "") {
-    showError(usernameInput, "Username is required");
-    isValid = false;
-  } else if (usernameValue.length < 3) {
-    showError(usernameInput, "Username must be at least 3 characters");
-    isValid = false;
-  }
+        if (isValid) {
+            feedbackDiv.textContent = "Registration successful!";
+            feedbackDiv.style.color = "#28a745";  // green
+        } else {
+            feedbackDiv.innerHTML = errorMessages.join("<br>");
+            feedbackDiv.style.color = "#dc3545";  // red
+        }
 
-  // Validate email
-  const emailValue = emailInput.value.trim();
-  if (emailValue === "") {
-    showError(emailInput, "Email is required");
-    isValid = false;
-  } else if (!isValidEmail(emailValue)) {
-    showError(emailInput, "Please enter a valid email address");
-    isValid = false;
-  }
+    });
 
-  // Validate password
-  const passwordValue = passwordInput.value.trim();
-  if (passwordValue === "") {
-    showError(passwordInput, "Password is required");
-    isValid = false;
-  } else if (passwordValue.length < 6) {
-    showError(passwordInput, "Password must be at least 6 characters");
-    isValid = false;
-  }
-
-  // If everything is valid
-  if (isValid) {
-    successMessage.textContent = "Form submitted successfully! ✅";
-
-    // Here you could actually submit the form to a server.
-    // form.submit();
-  }
 });
